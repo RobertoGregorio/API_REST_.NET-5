@@ -10,27 +10,31 @@ namespace WebApiDDD.Controllers
 {
     [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
-    {   
+    {
         DataContext _dataContext;
         IConfiguration _configuration;
 
-        public UserController(DataContext dataContext , IConfiguration configuration)
+        ITokenService _tokenservice;
+
+        public UserController(DataContext dataContext, IConfiguration configuration, ITokenService tokenservice)
         {
             _dataContext = dataContext;
             _configuration = configuration;
+            _tokenservice = tokenservice;
+
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login(UserModel userModel, ITokenService _tokenservice)
+        public ActionResult Login([FromBody] UserModel userModel)
         {
             try
             {
                 if (userModel == null)
-                    BadRequest("Login Inválido.");
+                    return BadRequest("Login Inválido.");
 
                 if (userModel.Username != "testeusername" || userModel.Password != "testepassword")
-                    BadRequest("Login Inválido.");
+                    return BadRequest("Login Inválido.");
 
                 var token = _tokenservice.CreateNewJwtToken
                 (
@@ -40,11 +44,11 @@ namespace WebApiDDD.Controllers
                     userModel
                 );
 
-                return Ok($"Token: {token}");
+                return Ok(new {token = token});
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,"Erro ao realizar login");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao realizar login");
             }
         }
     }

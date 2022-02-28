@@ -1,5 +1,6 @@
 using DDD.Data;
 using DDD.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,9 @@ namespace WebApiDDD.Controllers
             _dataContext = dbcontext;
         }
 
+        
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable> GetProducts()
         {
             try
@@ -80,9 +83,8 @@ namespace WebApiDDD.Controllers
             }
         }
 
-        [Route("UpdatePrice")]
         [HttpPut("{id}")]
-        public ActionResult UpdatePrice(int id, [FromBody] UpdatePriceProductDTO updatePriceDTO)
+        public ActionResult UpdatePrice(int id, [FromBody] UpdatePriceDTO updatePriceDTO)
         {
             try
             {
@@ -103,7 +105,6 @@ namespace WebApiDDD.Controllers
             }
         }
 
-        [Route("DeleteProduct")]
         [HttpDelete("{id}")]
         public ActionResult DeleteProduct(long id)
         {
