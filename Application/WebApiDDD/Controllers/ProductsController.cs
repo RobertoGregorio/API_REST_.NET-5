@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using WebApiDDD.Jsons.Products;
+using WebApiDDD.Jsons;
 
 namespace WebApiDDD.Controllers
 {
@@ -47,7 +47,7 @@ namespace WebApiDDD.Controllers
                 Product product = _dataContext.Products.FirstOrDefault(p => p.Id == id);
 
                 if (product == null)
-                    return NotFound($"Produto com id={id} não encontrado");
+                    return NotFound($"Produto com id={id} nï¿½o encontrado");
 
                 return Ok(product);
             }
@@ -59,12 +59,12 @@ namespace WebApiDDD.Controllers
 
         [Route("CreateProduct")]
         [HttpPost]
-        public ActionResult CreateProduct([FromBody] ProductDTO jsonCreateProduct)
+        public ActionResult CreateProduct([FromBody] CreateProductDTO jsonCreateProduct)
         {
             try
             {
                 if (_dataContext.Products.FirstOrDefault(prod => prod.Code == jsonCreateProduct.Code) != null)
-                    return BadRequest($"Produto com o código =  {jsonCreateProduct.Code} já registrado");
+                    return BadRequest($"Produto com o cï¿½digo =  {jsonCreateProduct.Code} jï¿½ registrado");
 
                 Product product = new(jsonCreateProduct.Price, jsonCreateProduct.Name, jsonCreateProduct.Code);
 
@@ -82,12 +82,12 @@ namespace WebApiDDD.Controllers
 
         [Route("UpdatePrice")]
         [HttpPut("{id}")]
-        public ActionResult UpdatePrice(int id, [FromBody] UpdatePriceDTO updatePriceDTO)
+        public ActionResult UpdatePrice(int id, [FromBody] UpdatePriceProductDTO updatePriceDTO)
         {
             try
             {
                 if (id != updatePriceDTO.Id)
-                    return BadRequest($"Os id´s dos produtos não coincidem");
+                    return BadRequest($"Os idï¿½s  nï¿½o coincidem");
 
                 Product product = _dataContext.Products.FirstOrDefault(prod => prod.Id == updatePriceDTO.Id);
 
@@ -95,7 +95,7 @@ namespace WebApiDDD.Controllers
 
                 _dataContext.SaveChanges();
 
-                return new CreatedAtRouteResult("GetProduct", new { id = product.Id }, product );
+                return new CreatedAtRouteResult("GetProduct", new { id = product.Id }, product);
             }
             catch
             {
@@ -112,7 +112,7 @@ namespace WebApiDDD.Controllers
                 Product product = _dataContext.Products.FirstOrDefault(prod => prod.Id == id);
 
                 if (id != product.Id)
-                    return BadRequest($"recurso não encontrado");
+                    return BadRequest($"recurso nï¿½o encontrado");
 
                 _dataContext.Products.Remove(product);
                 _dataContext.SaveChanges();

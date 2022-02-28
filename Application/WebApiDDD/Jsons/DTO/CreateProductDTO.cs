@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApiDDD.Jsons.Products
+namespace WebApiDDD.Jsons
 {
-    public class ProductDTO
+    public class CreateProductDTO
     {
         [Required]
         public decimal Price { get; set; }
